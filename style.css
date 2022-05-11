@@ -1,0 +1,123 @@
+/* färger 
+  Röd: rgb(141,38,38)
+  Gul: rgb(225,187,
+*/
+
+@font-face {
+  font-family: 'Norse Bold';
+  src: url('./assets/NorseBold.otf');
+}
+
+@font-face {
+  font-family: 'Roboto';
+  src: url('./assets/Roboto-Regular.ttf');
+}
+
+html {
+  font-family: 'Roboto', ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", "Helvetica Neue", Arial, "Noto Sans", sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji" !important;
+}
+
+.young-font {
+  font-family: "Comic Sans MS", "Comic Sans", cursive;
+}
+
+.norse-font {
+  font: 1em 'Norse Bold';
+  letter-spacing: 3px;
+}
+
+.text-stroke-white-2 {
+  -webkit-text-stroke: 0.5px white;
+}
+
+.infoContainerImage{
+  /* Add the blur effect */
+  background-image: url(./img/vikingship.png);
+  filter: opacity(25%) blur(5px);
+  scale: 1.1;
+
+  /* Center and scale the image nicely */
+  background-position: center;
+  background-repeat: no-repeat;
+  background-size: cover;
+}
+
+.infoContainerImage[data-customer-category="young"] {
+  background-image: url(./img/viking_lego.webp);
+  filter: opacity(25%) blur(2px);
+}
+
+.infoContainerImage[data-customer-category="couple"] {
+  background-image: url(./img/viking_heart_shield.jpg);
+}
+
+/* Price category toggle */
+/*
+.custom-checkbox {
+  width: calc(200px*.66);
+  height: calc(50px*.66);
+}
+*/
+
+.custom-checkbox input#status {
+  display: none;
+}
+.custom-checkbox input#status + label {
+  height: 100%;
+  width: 100%;
+}
+.custom-checkbox input#status + label > .status-switch {
+  cursor: pointer;
+  width: 100%;
+  height: 100%;
+  position: relative;
+  transition: all 0.5s ease;
+  padding: 3px;
+  border-radius: 5px;
+  box-shadow: inset 0 4px 4px 2px rgba(0, 0, 0, 0.2);
+}
+.custom-checkbox input#status + label > .status-switch:before, .custom-checkbox input#status + label > .status-switch:after {
+  border-radius: 2px;
+  height: calc(100% - 6px);
+  width: calc(50% - 3px);
+  display: flex;
+  align-items: center;
+  position: absolute;
+  justify-content: center;
+  transition: all 0.3s ease;
+}
+.custom-checkbox input#status + label > .status-switch:before {
+  left: 3px;
+  z-index: 10;
+  content: attr(data-unchecked);
+  border-radius: 5px;
+}
+
+.custom-checkbox[data-customer-category="adult"] input#status + label > .status-switch:before {
+  background-color: rgb(127, 29, 29);
+  color: white;
+}
+
+.custom-checkbox[data-customer-category="couple"] input#status + label > .status-switch:before {
+  background-color: rgb(253, 230, 138);
+  color: rgb(127, 29, 29);
+}
+
+.custom-checkbox[data-customer-category="young"] input#status + label > .status-switch:before {
+  background-color: rgb(59, 130, 246);
+  color: white;
+}
+
+.custom-checkbox input#status + label > .status-switch:after {
+  right: 0;
+  content: attr(data-checked);
+}
+
+.custom-checkbox input#status:checked + label > .status-switch:after {
+  left: 0;
+  content: attr(data-unchecked);
+}
+.custom-checkbox input#status:checked + label > .status-switch:before {
+  left: 50%;
+  content: attr(data-checked);
+}

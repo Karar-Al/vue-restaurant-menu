@@ -1,0 +1,228 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Restaurant Ivars</title>
+    <script src="https://unpkg.com/vue@3"></script>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="./style.css" />
+  </head>
+  <body>
+    <div id="app">
+      <div
+        class="flex h-screen flex-col"
+        v-bind:class="{
+          'bg-red-900 text-white': customerCategory === 'couple',
+          'young-font': customerCategory === 'young',
+        }"
+      >
+        <!-- Header -->
+        <div
+          class="flex justify-between bg-black p-4"
+          v-bind:class="{
+            'bg-blue-900': customerCategory === 'young',
+          }"
+        >
+          <div class="flex items-center gap-4">
+            <!-- Logo -->
+            <figure class="w-16 md:w-20">
+              <logo class="text-red-900"></logo>
+            </figure>
+            <!-- Text -->
+            <h1
+              class="norse-font text-stroke-white-2 flex self-center text-lg text-red-900 md:text-5xl"
+            >
+              Restaurant Ivars
+            </h1>
+          </div>
+          <div class="flex flex-col justify-center gap-2 text-black">
+            <button
+              class="rounded-md bg-white p-2"
+              v-bind:class="{
+                'invisible': customerCategory === ''
+              }"
+              v-on:click="customerCategory = ''"
+            >
+              Välj meny
+            </button>
+            <totalamount
+              v-bind:number="totalAmount"
+              v-on:click="showOrder = !showOrder"
+            ></totalamount>
+          </div>
+        </div>
+
+        <!-- Main -->
+        <div class="flex h-full overflow-hidden">
+          <!-- När customerCategory är vald. -->
+          <div v-if="customerCategory !== ''" class="flex flex-1 flex-row">
+            <div
+              class="flex flex-auto flex-row lg:basis-3/4"
+              v-bind:class="{
+                'hidden md:hidden lg:flex': showOrder
+              }"
+            >
+              <!-- Menu-lista -->
+              <div
+                class="flex flex-auto flex-col md:basis-1/2"
+                v-bind:class="{ 
+                  'hidden md:flex': chosenMeal.name
+                }"
+              >
+                <!-- Menu Navigation -->
+                <div class="flex justify-between">
+                  <navigationitem
+                    text="Förrätter"
+                    v-bind:selected="menuCategory === 'appetizers'"
+                    v-on:click="menuCategory = 'appetizers'"
+                    v-bind:customer-category="customerCategory"
+                  ></navigationitem>
+                  <navigationitem
+                    text="Varmrätter"
+                    v-bind:selected="menuCategory === 'main'"
+                    v-on:click="menuCategory = 'main'"
+                    v-bind:customer-category="customerCategory"
+                  ></navigationitem>
+                  <navigationitem
+                    text="Desserter"
+                    v-bind:selected="menuCategory === 'desserts'"
+                    v-on:click="menuCategory = 'desserts'"
+                    v-bind:customer-category="customerCategory"
+                  ></navigationitem>
+                </div>
+
+                <div
+                  class="flex justify-between gap-2 py-2 px-6 shadow-xl lg:p-6"
+                >
+                  <h1
+                    class="self-center text-2xl lg:text-4xl"
+                    v-bind:class="{
+                      'norse-font': customerCategory === 'adult',
+                      'norse-font text-amber-200': customerCategory === 'couple',
+                      'text-blue-500': customerCategory === 'young',
+                    }"
+                  >
+                    <span v-if="menuCategory === 'appetizers'">Förrätter</span>
+                    <span v-if="menuCategory === 'main'">Varmrätter</span>
+                    <span v-if="menuCategory === 'desserts'">Desserter</span>
+                  </h1>
+                  <pricetoggle
+                    v-on:checked="priceToggle"
+                    class="h-9 w-36 lg:h-14 lg:w-48"
+                    v-bind:customer-category="customerCategory"
+                    v-bind:checked="priceCategoryIsCheap"
+                  ></pricetoggle>
+                </div>
+
+                <!-- Maträtter -->
+                <div class="overflow-auto py-4">
+                  <menuitem
+                    v-bind:customer-category="customerCategory"
+                    v-for="(item, index) in filteredMenu"
+                    v-bind:key="item"
+                    v-bind:price="item.price"
+                    v-bind:description="item.description"
+                    v-bind:name="item.name"
+                    v-bind:index="index"
+                    v-on:change-chosen-meal="changeChosenMeal"
+                    v-on:add-order="addOrder"
+                  >
+                  </menuitem>
+                </div>
+              </div>
+
+              <!-- Information om maträtten -->
+              <div
+                class="relative w-full overflow-hidden md:basis-1/2"
+                v-bind:class="{ 
+                  'hidden md:block': !chosenMeal.name
+                }"
+              >
+                <mealinfo
+                  v-bind:image="chosenMeal.image"
+                  v-bind:name="chosenMeal.name"
+                  v-bind:customer-category="customerCategory"
+                  v-on:deselect-chosen-meal="chosenMeal = {}"
+                ></mealinfo>
+              </div>
+            </div>
+
+            <!-- Aside -->
+            <div
+              class="flex flex-auto flex-col bg-white lg:basis-1/4"
+              v-bind:class="{ 'hidden lg:flex': !showOrder }"
+            >
+              <orderaside
+                v-bind:order="order"
+                v-on:subtract-item="subtractFromOrder"
+                v-on:deselect-show-order="showOrder = !showOrder"
+              ></orderaside>
+            </div>
+          </div>
+
+          <!-- När customerCategory inte är vald - Alltså Splash page -->
+          <div
+            v-if="customerCategory === ''"
+            class="flex w-full flex-col items-center justify-between gap-4 overflow-auto bg-black p-4 lg:flex-row"
+          >
+            <button
+              v-on:click="customerCategory = 'adult'"
+              class="norse-font flex h-full w-full items-center justify-center border-2 border-red-900 bg-white p-4 text-4xl text-red-900"
+            >
+              Viking meny
+            </button>
+            <button
+              v-on:click="customerCategory = 'couple'"
+              class="norse-font flex h-full w-full items-center justify-center border-2 border-amber-200 bg-red-900 p-4 text-4xl text-amber-200"
+            >
+              Parmeny
+            </button>
+            <button
+              v-on:click="customerCategory = 'young'"
+              class="young-font flex h-full w-full items-center justify-center border-2 border-blue-500 bg-blue-500 p-4 text-4xl text-white"
+            >
+              Barnmeny
+            </button>
+          </div>
+        </div>
+
+        <!-- Footer -->
+        <footer
+          class="flex items-stretch gap-2 bg-black p-4"
+          v-bind:class="{
+            'text-white': customerCategory === 'adult' || customerCategory === '',
+            'bg-red-900 text-amber-200 border-amber-200 border-t-2': customerCategory === 'couple',
+            'bg-blue-700 text-white': customerCategory === 'young',
+          }"
+        >
+          <foot></foot>
+        </footer>
+      </div>
+    </div>
+
+    <script src="./meals.js"></script>
+    <script src="./app.js"></script>
+    <script src="./components/decorative/logo.js"></script>
+    <script src="./components/decorative/decorhr.js"></script>
+    <script src="./components/decorative/icons/info.js"></script>
+    <script src="./components/decorative/icons/reservation.js"></script>
+    <script src="./components/decorative/icons/x.js"></script>
+    <script src="./components/decorative/icons/plus.js"></script>
+    <script src="./components/decorative/icons/minus.js"></script>
+    <script src="./components/decorative/icons/heart.js"></script>
+
+    <script src="./components/total-amount.js"></script>
+    <script src="./components/navigation-item.js"></script>
+    <script src="./components/price-toggle.js"></script>
+    <script src="./components/menu-item.js"></script>
+    <script src="./components/meal-info.js"></script>
+    <script src="./components/order-aside.js"></script>
+    <script src="./components/foot.js"></script>
+
+    <script>
+      app.mount("#app");
+    </script>
+  </body>
+</html>
