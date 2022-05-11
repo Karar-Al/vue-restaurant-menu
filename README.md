@@ -4,7 +4,7 @@
 
 ## Länkar
 
-- Trello - https://trello.com/b/qoPNSiNX/restaurang-ivars
+- Trello - https://trello.com/b/qoPNSiNX/
 - Google Docs - https://docs.google.com/document/d/15z01zb9JGR8_i0Luc8prmNyACOy5dzj_7HuCW6aBhR8/view
 - Figma - https://www.figma.com/file/Cwz7gjKjqRr2fgqheJ9fvR/Restaurant-Ivars?node-id=3%3A3
 
